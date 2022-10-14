@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  web:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - .:/code
+    env_file:
+      - var.env
+    environment:
+      DEBUG: 'True'
+    links:
+      - db
+    depends_on:
+      - db
+  db:
+    image: postgres:11-alpine
+    environment:
+       POSTGRES_DB: wb_parserdb
+       POSTGRES_USER: anton
+       POSTGRES_PASSWORD: admin
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
